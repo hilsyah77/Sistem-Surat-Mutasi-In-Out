@@ -1,0 +1,43 @@
+{
+  "entities": {
+    "students": {
+      "fields": {
+        "nis": { "type": "string", "description": "Nomor Induk Siswa" },
+        "nisn": { "type": "string", "description": "Nomor Induk Siswa Nasional" },
+        "name": { "type": "string", "description": "Nama Lengkap Siswa" },
+        "gender": { "type": "string", "description": "Jenis Kelamin (L/P)" },
+        "birthPlace": { "type": "string", "description": "Tempat Lahir" },
+        "birthDate": { "type": "string", "description": "Tanggal Lahir" },
+        "classId": { "type": "string", "description": "Kelas atau Rombel" },
+        "academicYear": { "type": "string", "description": "Tahun Pelajaran" },
+        "parentName": { "type": "string", "description": "Nama Orang Tua / Wali" },
+        "phone": { "type": "string", "description": "Nomor Telepon / WhatsApp" },
+        "address": { "type": "string", "description": "Alamat Tempat Tinggal" },
+        "status": { "type": "string", "description": "Status Siswa (Aktif, Mutasi Keluar, Mutasi Masuk, Lulus)" },
+        "averageGrade": { "type": "number", "description": "Nilai Rata-rata Akademik" },
+        "attendanceRate": { "type": "number", "description": "Persentase Kehadiran (%)" }
+      }
+    },
+    "transfers_in": {
+      "fields": {
+        "studentName": { "type": "string", "description": "Nama Siswa Mutasi Masuk" },
+        "nisn": { "type": "string", "description": "NISN Siswa" },
+        "originSchool": { "type": "string", "description": "Madrasah / Sekolah Asal" },
+        "originNpsn": { "type": "string", "description": "NPSN Asal" },
+        "targetClass": { "type": "string", "description": "Kelas Tujuan Masuk" },
+        "letterNumber": { "type": "string", "description": "Nomor Surat Keterangan Diterima" },
+        "status": { "type": "string", "description": "Status Permohonan (Disetujui/Menunggu/Ditolak)" }
+      }
+    },
+    "transfers_out": {
+      "fields": {
+        "studentName": { "type": "string", "description": "Nama Siswa Mutasi Keluar" },
+        "nis": { "type": "string", "description": "NIS Siswa" },
+        "nisn": { "type": "string", "description": "NISN Siswa" },
+        "destinationSchool": { "type": "string", "description": "Madrasah / Sekolah Tujuan" },
+        "letterNumber": { "type": "string", "description": "Nomor Surat Mutasi Pindah Keluar" },
+        "status": { "type": "string", "description": "Status Permohonan" }
+      }
+    }
+  }
+}

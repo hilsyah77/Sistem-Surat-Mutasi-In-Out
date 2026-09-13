@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-size: 13.5px;
+    color: #000000;
+  }
+
+  body {
+    background-color: #F4F6F5;
+    color: #000000;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-serif {
+    font-family: 'Playfair Display', Georgia, Cambria, serif;
+    color: #000000;
+  }
+
+  /* Ensure inputs, labels, and table content are crisp black */
+  input, select, textarea, button, table {
+    color: #000000;
+  }
+
+  label {
+    color: #000000;
+  }
+}
+
+/* Form typography rules: crisp black font for all inputs, selects, textareas, and labels */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="date"],
+input[type="tel"],
+input[type="password"],
+input[type="search"],
+select,
+textarea {
+  color: #000000 !important;
+  font-weight: 500;
+}
+
+label {
+  color: #000000 !important;
+}
+
+select option {
+  color: #000000 !important;
+  background-color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #64748b;
+}
+

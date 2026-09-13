@@ -1,0 +1,8 @@
+{
+  "name": "Sistem Manajemen Siswa Mutasi",
+  "description": "Aplikasi manajemen siswa madrasah terpadu dengan CRUD data siswa, mutasi masuk dan keluar, analitik performa kelas, ekspor PDF/Excel, serta integrasi Firebase \u0026 MySQL.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
