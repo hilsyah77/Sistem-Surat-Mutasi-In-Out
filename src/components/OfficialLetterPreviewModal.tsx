@@ -58,7 +58,7 @@ export const OfficialLetterPreviewModal: React.FC<OfficialLetterProps> = ({
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.setTextColor(20, 83, 45); // Dark Islamic Green
-      doc.text(inst.name.toUpperCase(), 108, 19, { align: 'center' });
+      doc.text((inst?.name || 'MADRASAH').toUpperCase(), 108, 19, { align: 'center' });
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8.5);

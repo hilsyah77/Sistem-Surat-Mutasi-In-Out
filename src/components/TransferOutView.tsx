@@ -33,12 +33,13 @@ export const TransferOutView: React.FC<TransferOutViewProps> = ({
   const [statusFilter, setStatusFilter] = useState('Semua');
 
   const filtered = transfersOut.filter(t => {
+    const q = (searchQuery || '').toLowerCase();
     const matchesSearch = 
-      t.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.letterNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.destinationSchool.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.nis.includes(searchQuery) ||
-      t.nisn.includes(searchQuery);
+      (t.studentName || '').toLowerCase().includes(q) ||
+      (t.letterNumber || '').toLowerCase().includes(q) ||
+      (t.destinationSchool || '').toLowerCase().includes(q) ||
+      (t.nis || '').includes(searchQuery) ||
+      (t.nisn || '').includes(searchQuery);
 
     const matchesStatus = statusFilter === 'Semua' || t.status === statusFilter;
     return matchesSearch && matchesStatus;

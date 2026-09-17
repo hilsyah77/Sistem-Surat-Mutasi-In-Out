@@ -118,19 +118,22 @@ export class ExportService {
     });
 
     // 1. Kop Surat Resmi
+    const ministryName = (institution?.ministry || 'KEMENTERIAN AGAMA REPUBLIK INDONESIA').toUpperCase();
+    const instName = (institution?.name || 'MADRASAH').toUpperCase();
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
-    doc.text(institution.ministry.toUpperCase(), 148.5, 12, { align: 'center' });
+    doc.text(ministryName, 148.5, 12, { align: 'center' });
     
     doc.setFontSize(14);
     doc.setTextColor(20, 83, 45); // Islamic Madrasah dark green #14532d
-    doc.text(institution.name.toUpperCase(), 148.5, 18, { align: 'center' });
+    doc.text(instName, 148.5, 18, { align: 'center' });
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(60, 60, 60);
-    doc.text(`${institution.address}, ${institution.city}, ${institution.province} | Telp: ${institution.phone} | Email: ${institution.email}`, 148.5, 23, { align: 'center' });
-    doc.text(`NSM: ${institution.nsm}  |  NPSN: ${institution.npsn}  |  Akreditasi: A (Unggul)`, 148.5, 27, { align: 'center' });
+    doc.text(`${institution?.address || ''}, ${institution?.city || ''}, ${institution?.province || ''} | Telp: ${institution?.phone || ''} | Email: ${institution?.email || ''}`, 148.5, 23, { align: 'center' });
+    doc.text(`NSM: ${institution?.nsm || '-'}  |  NPSN: ${institution?.npsn || '-'}  |  Akreditasi: ${institution?.accreditation || 'A (Unggul)'}`, 148.5, 27, { align: 'center' });
 
     // Double rule lines for official letterhead
     doc.setDrawColor(20, 83, 45);
@@ -203,14 +206,15 @@ export class ExportService {
     if (finalY < 185) {
       const sigX = 220;
       doc.setFontSize(8.5);
-      doc.text(`${institution.city}, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, sigX, finalY);
-      doc.text(institution.headmasterTitle, sigX, finalY + 4);
+      doc.text(`${institution?.city || ''}, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, sigX, finalY);
+      doc.text(institution?.headmasterTitle || 'Kepala Madrasah', sigX, finalY + 4);
       doc.setFont('helvetica', 'bold');
-      doc.text(institution.headmasterName, sigX, finalY + 22);
+      doc.text(institution?.headmasterName || '', sigX, finalY + 22);
       doc.setFont('helvetica', 'normal');
-      doc.text(`NIP. ${institution.headmasterNip}`, sigX, finalY + 26);
+      doc.text(`NIP. ${institution?.headmasterNip || '-'}`, sigX, finalY + 26);
     }
 
-    doc.save(`Laporan_Siswa_${institution.name.replace(/\s+/g, '_')}.pdf`);
+    const safeFileName = (institution?.name || 'Madrasah').replace(/\s+/g, '_');
+    doc.save(`Laporan_Siswa_${safeFileName}.pdf`);
   }
 }

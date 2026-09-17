@@ -19,12 +19,13 @@ import {
   Mars,
   Venus 
 } from 'lucide-react';
-import { Student, Gender, StudentStatus } from '../types';
+import { Student, Gender, StudentStatus, InstitutionProfile } from '../types';
 import { classesList } from '../services/mockData';
 import { ExportService } from '../services/exportService';
 
 interface StudentListViewProps {
   students: Student[];
+  institution?: InstitutionProfile;
   availableClasses?: string[];
   onOpenClassModal?: () => void;
   onOpenAddModal?: () => void;
@@ -37,6 +38,7 @@ interface StudentListViewProps {
 
 export const StudentListView: React.FC<StudentListViewProps> = ({
   students,
+  institution,
   availableClasses,
   onOpenClassModal,
   onOpenAddModal,
@@ -67,11 +69,12 @@ export const StudentListView: React.FC<StudentListViewProps> = ({
   const filteredStudents = useMemo(() => {
     return students
       .filter(s => {
+        const query = (searchQuery || '').toLowerCase();
         const matchesSearch = 
-          s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          s.nis.includes(searchQuery) ||
-          s.nisn.includes(searchQuery) ||
-          s.parentName.toLowerCase().includes(searchQuery.toLowerCase());
+          (s.name || '').toLowerCase().includes(query) ||
+          (s.nis || '').includes(searchQuery) ||
+          (s.nisn || '').includes(searchQuery) ||
+          (s.parentName || '').toLowerCase().includes(query);
 
         const matchesClass = selectedClass === 'Semua Kelas' || s.classId === selectedClass;
         const matchesStatus = selectedStatus === 'Semua' || s.status === selectedStatus;
@@ -81,9 +84,9 @@ export const StudentListView: React.FC<StudentListViewProps> = ({
       })
       .sort((a, b) => {
         let comp = 0;
-        if (sortBy === 'name') comp = a.name.localeCompare(b.name);
-        else if (sortBy === 'nis') comp = a.nis.localeCompare(b.nis);
-        else if (sortBy === 'class') comp = a.classId.localeCompare(b.classId);
+        if (sortBy === 'name') comp = (a.name || '').localeCompare(b.name || '');
+        else if (sortBy === 'nis') comp = (a.nis || '').localeCompare(b.nis || '');
+        else if (sortBy === 'class') comp = (a.classId || '').localeCompare(b.classId || '');
 
         return sortOrder === 'asc' ? comp : -comp;
       });
@@ -97,7 +100,7 @@ export const StudentListView: React.FC<StudentListViewProps> = ({
   };
 
   const handleExportPDF = () => {
-    ExportService.exportStudentsToPDF(filteredStudents, undefined, selectedClass);
+    ExportService.exportStudentsToPDF(filteredStudents, institution, selectedClass);
   };
 
   return (

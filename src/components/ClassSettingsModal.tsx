@@ -55,12 +55,12 @@ export const ClassSettingsModal: React.FC<ClassSettingsModalProps> = ({
 
   const handleAddClass = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    const trimmed = newClassName.trim().toUpperCase();
+    const trimmed = (newClassName || '').trim().toUpperCase();
     if (!trimmed) {
       showNotice('Mohon masukkan nama kelas / rombel.', 'error');
       return;
     }
-    if (classes.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
+    if (classes.some(c => String(c || '').toLowerCase() === trimmed.toLowerCase())) {
       showNotice(`Kelas "${trimmed}" sudah terdaftar di daftar rombel.`, 'error');
       return;
     }
@@ -101,7 +101,7 @@ export const ClassSettingsModal: React.FC<ClassSettingsModalProps> = ({
   };
 
   const handleSaveEdit = async (idx: number, oldName: string) => {
-    const trimmed = editingValue.trim().toUpperCase();
+    const trimmed = (editingValue || '').trim().toUpperCase();
     if (!trimmed) {
       showNotice('Nama kelas tidak boleh kosong.', 'error');
       return;
@@ -110,7 +110,7 @@ export const ClassSettingsModal: React.FC<ClassSettingsModalProps> = ({
       setEditingIndex(null);
       return;
     }
-    if (classes.some((c, i) => i !== idx && c.toLowerCase() === trimmed.toLowerCase())) {
+    if (classes.some((c, i) => i !== idx && String(c || '').toLowerCase() === trimmed.toLowerCase())) {
       showNotice(`Kelas "${trimmed}" sudah ada di daftar.`, 'error');
       return;
     }

@@ -36,11 +36,12 @@ export const TransferInView: React.FC<TransferInViewProps> = ({
   const [statusFilter, setStatusFilter] = useState('Semua');
 
   const filtered = transfersIn.filter(t => {
+    const q = (searchQuery || '').toLowerCase();
     const matchesSearch = 
-      t.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.letterNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.originSchool.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.nisn.includes(searchQuery);
+      (t.studentName || '').toLowerCase().includes(q) ||
+      (t.letterNumber || '').toLowerCase().includes(q) ||
+      (t.originSchool || '').toLowerCase().includes(q) ||
+      (t.nisn || '').includes(searchQuery);
 
     const matchesStatus = statusFilter === 'Semua' || t.status === statusFilter;
     return matchesSearch && matchesStatus;

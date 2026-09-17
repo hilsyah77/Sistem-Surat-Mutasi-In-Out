@@ -2,6 +2,7 @@ import { Student, TransferIn, TransferOut, InstitutionProfile, UserProfile } fro
 
 export const defaultInstitution: InstitutionProfile = {
   name: "MTs. Asy-Syafi'iyyah Jatibarang",
+  ministry: 'Kementerian Agama Republik Indonesia',
   nsm: '121233290078',
   npsn: '20364748',
   level: 'Madrasah Tsanawiyah (MTs)',

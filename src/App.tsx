@@ -322,7 +322,7 @@ export default function App() {
         transfersInCount={transfersIn.length}
         transfersOutCount={transfersOut.length}
         onExportExcel={() => ExportService.exportStudentsToExcel(students)}
-        onExportPDF={() => ExportService.exportStudentsToPDF(students)}
+        onExportPDF={() => ExportService.exportStudentsToPDF(students, institution)}
       />
 
       {/* Container Tampilan Utama di Bawah Header & Navbar */}
@@ -349,6 +349,7 @@ export default function App() {
             {activeTab === 'siswa' && (
               <StudentListView
                 students={students}
+                institution={institution}
                 availableClasses={classes}
                 onOpenClassModal={() => setIsClassModalOpen(true)}
                 onOpenAddModal={() => {

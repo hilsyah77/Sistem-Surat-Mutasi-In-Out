@@ -4,28 +4,18 @@ import {
   UserCheck, 
   Calendar, 
   FileText, 
-  Palette, 
-  Database, 
   Save, 
   RefreshCw, 
-  Download, 
-  Upload, 
   CheckCircle2, 
   AlertCircle, 
-  School, 
-  ShieldCheck, 
-  Award, 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Globe, 
-  Sparkles,
   Sliders,
   Image as ImageIcon,
+  UploadCloud,
+  School,
   Trash2,
-  Eye,
   FileImage,
-  UploadCloud
+  Eye,
+  ShieldCheck
 } from 'lucide-react';
 import { InstitutionProfile, Student, TransferIn, TransferOut } from '../types';
 import { generateLetterNumber } from '../utils/letterNumber';
@@ -38,27 +28,19 @@ interface SettingsViewProps {
   transfersOut?: TransferOut[];
   onResetAllData?: () => Promise<void>;
   onResetData?: () => Promise<void>;
-  onRestoreBackup: (payload: any) => Promise<void>;
+  onRestoreBackup?: (payload: any) => Promise<void>;
 }
 
-type SettingsSection = 'profil' | 'kop' | 'pejabat' | 'akademik' | 'surat' | 'backup';
+type SettingsSection = 'profil' | 'kop' | 'pejabat' | 'akademik' | 'surat';
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
   institution,
   onSaveInstitution,
-  students = [],
-  transfersIn = [],
-  transfersOut = [],
-  onResetAllData,
-  onResetData,
-  onRestoreBackup
 }) => {
   const [activeSection, setActiveSection] = useState<SettingsSection>('profil');
   const [formData, setFormData] = useState<InstitutionProfile>({ ...institution });
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [isResetting, setIsResetting] = useState(false);
-  const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
 
   const handleChange = (field: keyof InstitutionProfile, value: any) => {
     setFormData(prev => ({
@@ -124,64 +106,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     }
   };
 
-  // Export Complete Backup JSON
-  const handleExportBackup = () => {
-    const backupData = {
-      version: '1.0',
-      exportedAt: new Date().toISOString(),
-      institution: formData,
-      studentsCount: students.length,
-      transfersInCount: transfersIn.length,
-      transfersOutCount: transfersOut.length,
-      students,
-      transfersIn,
-      transfersOut
-    };
-
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
-    const downloadAnchor = document.createElement('a');
-    const fileName = `backup_sim_madrasah_${formData.name.replace(/\s+/g, '_').toLowerCase()}_${new Date().toISOString().slice(0, 10)}.json`;
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", fileName);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-  };
-
-  // Import Backup JSON
-  const handleImportBackup = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      try {
-        const json = JSON.parse(event.target?.result as string);
-        if (json.students && Array.isArray(json.students)) {
-          await onRestoreBackup(json);
-          if (json.institution) {
-            setFormData(json.institution);
-          }
-          setRestoreMessage(`Berhasil memulihkan ${json.students.length} siswa dan data mutasi.`);
-          setTimeout(() => setRestoreMessage(null), 5000);
-        } else {
-          alert('Format berkas cadangan tidak sesuai!');
-        }
-      } catch (err) {
-        alert('Gagal membaca berkas JSON cadangan!');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  };
-
   const sections: { id: SettingsSection; label: string; icon: any; desc: string }[] = [
     { id: 'profil', label: 'Profil Madrasah', icon: Building2, desc: 'Identitas, NSM & NPSN' },
     { id: 'kop', label: 'Logo & Kop Surat', icon: ImageIcon, desc: 'Upload Logo & Kop Surat' },
     { id: 'pejabat', label: 'Pimpinan & TU', icon: UserCheck, desc: 'Kepala & Titi Mangsa' },
     { id: 'akademik', label: 'Tahun Pelajaran', icon: Calendar, desc: 'Tahun Ajaran & Semester' },
     { id: 'surat', label: 'Format Nomor Surat', icon: FileText, desc: 'Klasifikasi Surat Mutasi' },
-    { id: 'backup', label: 'Cadangan & Reset', icon: Database, desc: 'JSON Backup & Pemulihan' },
   ];
 
   return (
@@ -921,107 +851,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* 5. Cadangan & Reset Data */}
-            {activeSection === 'backup' && (
-              <div className="space-y-6 animate-in fade-in duration-200">
-                <div className="border-b border-emerald-100 pb-4">
-                  <h3 className="text-lg font-serif font-bold text-slate-900 flex items-center gap-2">
-                    <Database className="w-5 h-5 text-emerald-700" />
-                    Pusat Cadangan (Backup) & Pemulihan Data
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Amankan seluruh basis data Buku Induk Siswa, riwayat mutasi masuk, mutasi keluar, dan pengaturan lembaga ke dalam berkas JSON mandiri.
-                  </p>
-                </div>
-
-                {restoreMessage && (
-                  <div className="p-4 bg-emerald-100 text-emerald-900 rounded-2xl border border-emerald-300 text-xs font-semibold flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-                    <span>{restoreMessage}</span>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  
-                  {/* Backup Card */}
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                      <Download className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-slate-900">Unduh Cadangan Lengkap (JSON)</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Menyimpan {students.length} siswa, {transfersIn.length} mutasi masuk, dan {transfersOut.length} mutasi keluar.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleExportBackup}
-                      className="w-full py-2.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-xs"
-                    >
-                      <Download className="w-4 h-4" />
-                      <span>Unduh File Backup</span>
-                    </button>
-                  </div>
-
-                  {/* Restore Card */}
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
-                      <Upload className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-slate-900">Pulihkan dari Berkas Cadangan</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Impor kembali berkas JSON cadangan yang pernah diunduh sebelumnya.
-                      </p>
-                    </div>
-                    <label className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs">
-                      <Upload className="w-4 h-4" />
-                      <span>Pilih File Cadangan (.json)</span>
-                      <input
-                        type="file"
-                        accept=".json"
-                        onChange={handleImportBackup}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-
-                </div>
-
-                {/* Reset / Kosongkan Data Section with Caution */}
-                <div className="p-5 bg-rose-50/70 rounded-2xl border border-rose-200 space-y-3 mt-4">
-                  <div className="flex items-center gap-2 text-rose-800 font-bold text-sm">
-                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                    <span>Hapus Seluruh Data Siswa & Mutasi (Kosongkan Data)</span>
-                  </div>
-                  <p className="text-xs text-rose-700 leading-relaxed">
-                    Tindakan ini akan menghapus seluruh data siswa, riwayat mutasi masuk, dan mutasi keluar baik di penyimpanan cloud Firebase maupun lokal. Aplikasi akan berada dalam kondisi bersih (0 siswa) dan siap untuk penginputan data riil madrasah.
-                  </p>
-                  <button
-                    type="button"
-                    disabled={isResetting}
-                    onClick={async () => {
-                      if (window.confirm('Apakah Anda yakin ingin menghapus seluruh data siswa dan mutasi? Database akan dikosongkan secara permanen.')) {
-                        setIsResetting(true);
-                        try {
-                          await onResetAllData();
-                          setRestoreMessage('Seluruh data siswa dan mutasi telah berhasil dihapus dan dikosongkan.');
-                          setTimeout(() => setRestoreMessage(null), 4000);
-                        } finally {
-                          setIsResetting(false);
-                        }
-                      }
-                    }}
-                    className="px-4 py-2 bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold rounded-xl transition disabled:opacity-50 cursor-pointer shadow-xs"
-                  >
-                    {isResetting ? 'Menghapus data...' : 'Hapus & Kosongkan Semua Data'}
-                  </button>
-                </div>
-
               </div>
             )}
 
